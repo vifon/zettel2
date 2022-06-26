@@ -32,6 +32,18 @@
 ;; To create a link use the "zettel:" prefix when creating a link with
 ;; `org-insert-link' (C-c C-l).
 
+;;; FAQ:
+
+;; - Q: Why not use the "id:" links available in the vanilla org-mode?
+;;
+;;   A: In their case, if a file gets renamed org-mode rescans
+;;      a specific set of files for the missing file, essentially
+;;      rebuilding its ID database.  It works but a given directory
+;;      needs to be added to the list of directories to scan.
+;;      The "zettel:" links never keep any database, so renaming is
+;;      completely irrelevant to their operation, it's all business
+;;      as usual.
+
 ;;; Code:
 
 (require 'zettel2)
