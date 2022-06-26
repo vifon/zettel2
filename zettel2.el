@@ -48,6 +48,22 @@ Passed to `format-time-string'.")
 (defconst zettel2-id-regexp
   (rx (= 8 digit) "T" (= 6 digit)))
 
+(defcustom zettel2-frontmatter-template "\
+:PROPERTIES:
+:ID:          %i
+:END:
+#+TITLE:      %t
+
+"
+  "The frontmatter template passed to `format-spec'.
+
+%i is replaced with the note ID.
+%t is replaced with the note title.
+
+Not all identifiers need to be used, but setting the title is
+highly recommended."
+  :type 'string)
+
 (defun zettel2-all-notes (&optional directory)
   "List all the valid notes in DIRECTORY or the current directory."
   (directory-files
@@ -107,7 +123,9 @@ Passed to `format-time-string'.")
   (let ((file-name (zettel2-sanitize-name title tags)))
     (find-file-other-window file-name)
     (with-current-buffer (get-file-buffer file-name)
-      (insert "#+TITLE: " title "\n\n")
+      (insert (format-spec zettel2-frontmatter-template
+                           `((?i . ,(zettel2-file-id file-name))
+                             (?t . ,title))))
       (goto-char (point-max)))))
 
 (defun zettel2-backrefs ()

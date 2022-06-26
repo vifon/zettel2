@@ -74,7 +74,10 @@ The filename contains:
 The file contents contain:
 
 - the human-readable note title
-- the IDs of the linked notes
+- the IDs of the linked notes (inside the links)
+- optionally: the note ID; this one is actually duplicated from the
+  filename but they are immutable anyway and it could be handy in case
+  of data recovery or for compatibility with the vanilla `org-mode`
 
 The file contents specifically don't contain:
 
