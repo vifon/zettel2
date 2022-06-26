@@ -44,16 +44,16 @@
   :group 'zettel2)
 
 (defcustom zettel2-link-text-prefix "§ "
-  "A prefix for titles of links between notes."
+  "A visual prefix for the internal links between notes."
   :type 'string)
 
 (defun zettel2-link-follow (link &optional arg)
-  (org-link-open-as-file (zettel2-id-to-file link) arg))
+  (org-link-open-as-file (zettel2-get-note-by-id link) arg))
 
 (defun zettel2-link-complete ()
   (concat
    "zettel:"
-   (zettel2-file-id (completing-read "File: " (zettel2-get-files)))))
+   (zettel2-file-id (completing-read "File: " (zettel2-all-notes)))))
 
 ;;; XXX: Currently this displays a link prefix by replacing the hidden
 ;;; leading "[" character of the link with this prefix.  Apart from

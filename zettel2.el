@@ -48,17 +48,20 @@ Passed to `format-time-string'.")
 (defconst zettel2-id-regexp
   (rx (= 8 digit) "T" (= 6 digit)))
 
-(defun zettel2-get-files ()
-  ""
-  (directory-files default-directory nil (rx bos
-                                             (regexp zettel2-id-regexp)
-                                             "--"
-                                             (+ (not "/"))
-                                             ".org"
-                                             eos)))
+(defun zettel2-all-notes (&optional directory)
+  "List all the valid notes in DIRECTORY or the current directory."
+  (directory-files
+   (or directory default-directory)
+   nil
+   (rx bos
+       (regexp zettel2-id-regexp)
+       "--"
+       (+ (not "/"))
+       ".org"
+       eos)))
 
-(defun zettel2-id-to-file (id)
-  "Find a file by the zettel ID."
+(defun zettel2-get-note-by-id (id)
+  "Find a file by the note ID."
   (pcase (directory-files default-directory nil
                           (rx bos (literal id) "--" (* anything) ".org" eos))
     (`(,file)  file)
@@ -66,37 +69,38 @@ Passed to `format-time-string'.")
     (file-list (error "Conflicting file IDs: %S" file-list))))
 
 (defun zettel2-file-id (file)
-  "Extract the zettel ID from FILE."
+  "Extract the note ID from FILE."
   (string-match (rx (or bos "/")
                     (group (regexp zettel2-id-regexp))
                     "--")
                 file)
   (match-string 1 file))
 
-(defun zettel2-new-filename (name)
+(defun zettel2-sanitize-name (name)
   "Compute a valid filename for a new note named NAME."
   (format "%s--%s.org"
           (format-time-string zettel2-id-time-format)
           (replace-regexp-in-string "[^a-zA-Z0-9]+" "-" (downcase name))))
 
 (defun zettel2-create-note (title)
-  "Create a new note."
+  "Create a new note with a given TITLE."
   (interactive
    (list (read-from-minibuffer "Title: ")))
-  (let ((file-name (zettel2-new-filename title)))
+  (let ((file-name (zettel2-sanitize-name title)))
     (find-file-other-window file-name)
     (with-current-buffer (get-file-buffer file-name)
       (insert "#+TITLE: " title "\n\n")
       (goto-char (point-max)))))
 
 (defun zettel2-backrefs ()
+  "Show the notes referencing this one using `grep'."
   (interactive)
   (unless (bound-and-true-p grep-template)
     (grep-compute-defaults))
   (lgrep (concat ":"
                  (regexp-quote (zettel2-file-id buffer-file-name))
                  "\\(--\\|]\\)")
-         (mapconcat #'shell-quote-argument (zettel2-get-files)
+         (mapconcat #'shell-quote-argument (zettel2-all-notes)
                     " ")))
 
 

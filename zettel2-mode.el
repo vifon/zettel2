@@ -48,7 +48,7 @@
 
 ;;;###autoload
 (define-derived-mode zettel2-mode org-mode "Zettel"
-  "A mode for Zettelkasten-style note-taking based on `org-mode'.")
+  "A mode exposing the zettel2 functionality.")
 
 
 (provide 'zettel2-mode)
