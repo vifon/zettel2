@@ -93,19 +93,19 @@ With C-u display the graph after updating it.
 
 With C-u C-u don't show the tags on the graph."
   (interactive "P")
-  (pcase arg
-    ('nil
-     (zettel2-update-graph)
-     (if zettel2-graph-format
-         (let ((graph-file (concat (file-name-sans-extension zettel2-graph-file)
-                                   "." zettel2-graph-format)))
-           (call-process "xdg-open" nil 0 nil graph-file))
-       (let ((graph-file (expand-file-name zettel2-graph-file)))
-         (call-process graph-file nil 0 nil))))
-    ('(4)
-     (zettel2-update-graph))
-    ('(16)
-     (zettel2-update-graph "--no-tags"))))
+  (cond
+   ((null arg)
+    (zettel2-update-graph)
+    (if zettel2-graph-format
+        (let ((graph-file (concat (file-name-sans-extension zettel2-graph-file)
+                                  "." zettel2-graph-format)))
+          (call-process "xdg-open" nil 0 nil graph-file))
+      (let ((graph-file (expand-file-name zettel2-graph-file)))
+        (call-process graph-file nil 0 nil))))
+   ((equal arg '(4))
+    (zettel2-update-graph))
+   ((equal arg '(16))
+    (zettel2-update-graph "--no-tags"))))
 
 
 (provide 'zettel2-graph)
