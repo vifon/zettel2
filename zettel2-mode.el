@@ -1,4 +1,4 @@
-;;; zettel2-mode.el --- A major mode for easy access to zettel2 functionality    -*- lexical-binding: t; -*-
+;;; zettel2-mode.el --- A mode for easy access to zettel2 functionality    -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Wojciech Siewierski
 
@@ -23,10 +23,10 @@
 ;;; Commentary:
 
 ;; A major mode based on org-mode exposing the zettel2 functionality.
-
-;; FAQ:
-;; - Q: Why is this a major mode and not a minor mode?
-;;   A: This way it can be triggered by `auto-mode-alist'.
+;;
+;; If a major mode is undesirable for whatever reason, an analogous
+;; minor mode is also provided.  The major mode has the advantage of
+;; `auto-mode-alist' being able to enable it.
 
 ;;; Code:
 
@@ -53,6 +53,12 @@
 ;;;###autoload
 (define-derived-mode zettel2-mode org-mode "Zettel"
   "A mode exposing the zettel2 functionality.")
+
+;;;###autoload
+(define-minor-mode zettel2-minor-mode
+  "A minor mode exposing the zettel2 functionality."
+  :lighter " zettel"
+  :keymap zettel2-mode-map)
 
 
 (provide 'zettel2-mode)
