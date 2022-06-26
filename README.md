@@ -89,10 +89,9 @@ KEYMAP
 `zettel2-mode` exposes the following keymap (on top of the regular
 `org-mode` one):
 
-- <kbd>C-c C-n</kbd> (`zettel2-create-note`) prompts for a title for
-  a new note and creates it according to the naming convention.
-  The tags can be freely added later by hand, no special UI is
-  intended for them.
+- <kbd>C-c C-n</kbd> (`zettel2-create-note`) prompts for a title and
+  tags for a new note and creates it according to the
+  naming convention.
 - <kbd>C-c C-M-r</kbd> (`zettel2-graph`) calculate and display the
   graph of relationships between notes.
 - <kbd>C-c C-r</kbd> (`zettel2-backrefs`) show the notes linking to

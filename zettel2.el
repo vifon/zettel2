@@ -60,6 +60,18 @@ Passed to `format-time-string'.")
        ".org"
        eos)))
 
+(defun zettel2-all-tags (&optional directory)
+  "List all the tags present in DIRECTORY in lexicographical order."
+  (sort (seq-uniq
+         (mapcan (lambda (file)
+                   (split-string
+                    (replace-regexp-in-string ".*__\\([^.]+\\)\\.org"
+                                              "\\1"
+                                              file)
+                    "_"))
+                 (zettel2-all-notes directory)))
+        #'string<))
+
 (defun zettel2-get-note-by-id (id)
   "Find a file by the note ID."
   (pcase (directory-files default-directory nil
@@ -76,17 +88,23 @@ Passed to `format-time-string'.")
                 file)
   (match-string 1 file))
 
-(defun zettel2-sanitize-name (name)
+(defun zettel2-sanitize-name (name &optional tags)
   "Compute a valid filename for a new note named NAME."
-  (format "%s--%s.org"
+  (format "%s--%s%s.org"
           (format-time-string zettel2-id-time-format)
-          (replace-regexp-in-string "[^a-zA-Z0-9]+" "-" (downcase name))))
+          (replace-regexp-in-string "[^a-zA-Z0-9]+" "-" (downcase name))
+          (if tags
+              (concat "__" (string-join tags "_"))
+            "")))
 
-(defun zettel2-create-note (title)
-  "Create a new note with a given TITLE."
+(defun zettel2-create-note (title &optional tags)
+  "Create a new note with a given TITLE and TAGS."
   (interactive
-   (list (read-from-minibuffer "Title: ")))
-  (let ((file-name (zettel2-sanitize-name title)))
+   (list
+    (read-from-minibuffer "Title: ")
+    (completing-read-multiple "Tags: "
+                              (zettel2-all-tags))))
+  (let ((file-name (zettel2-sanitize-name title tags)))
     (find-file-other-window file-name)
     (with-current-buffer (get-file-buffer file-name)
       (insert "#+TITLE: " title "\n\n")
