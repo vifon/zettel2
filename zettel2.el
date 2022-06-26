@@ -1,4 +1,4 @@
-;;; zettel2.el --- A Zettelkasten-style note-taking helper     -*- lexical-binding: t; -*-
+;;; zettel2.el --- Helpers for note organization     -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Wojciech Siewierski
 
@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; An Emacs mode for Zettelkasten-style note-taking.
+;; Helpers for note organization.
 
 ;; Install with:
 
@@ -35,11 +35,9 @@
 
 ;;; Code:
 
-(require 'org)
-
 
 (defgroup zettel2 nil
-  "A mode for Zettelkasten-style note-taking."
+  "Helpers for note organization."
   :group 'outlines)
 
 (defconst zettel2-id-time-format "%Y%m%dT%H%M%S"
@@ -100,20 +98,6 @@ Passed to `format-time-string'.")
                  "\\(--\\|]\\)")
          (mapconcat #'shell-quote-argument (zettel2-get-files)
                     " ")))
-
-(declare-function zettel2-graph "zettel2-graph")
-
-(defvar zettel2-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-n") #'zettel2-create-note)
-    (define-key map (kbd "C-c C-M-r") #'zettel2-graph)
-    (define-key map (kbd "C-c C-r") #'zettel2-backrefs)
-    (define-key map (kbd "M-n") #'org-next-link)
-    (define-key map (kbd "M-p") #'org-previous-link)
-    map))
-
-(define-derived-mode zettel2-mode org-mode "Zettel"
-  "A mode for Zettelkasten-style note-taking based on `org-mode'.")
 
 
 (provide 'zettel2)
