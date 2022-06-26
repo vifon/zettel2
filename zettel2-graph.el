@@ -57,55 +57,68 @@
                          buffer-file-name)))
   "Path to the script generating the graph.")
 
-(defcustom zettel2-graph-format nil
+(defcustom zettel2-graph-format 'standalone
   "The output format of the GraphViz graph of references.
 
-This value will be used like this: dot -T{format} -o {name}.{format}
+If set to a string, this value will be used like this:
+$ dot -T{format} -o {name}.{format}
 
-Can be left as nil to use -Tx11 with no external files and their
-readers necessary."
+Can also be set to the symbol `standalone' to use -Tx11 with no
+external files and their readers necessary."
   :type '(choice
-          (const :tag "standalone" nil)
+          (const :tag "standalone" 'standalone)
           (string)))
 
-(defun zettel2-update-graph (&rest args)
+(defun zettel2-graph-update (&rest args)
   "Recreate `zettel2-graph-file' and generate a PDF from it.
+
+ARGS are passed to `zettel2-graph-file'.
 
 Saves the current buffer before generating the graph."
   (interactive)
   (save-buffer)
   (let ((graph-file (expand-file-name zettel2-graph-file)))
-    (apply #'call-process zettel2-graph-script nil `(:file ,graph-file) nil args)
+    (apply #'call-process
+           zettel2-graph-script nil `(:file ,graph-file) nil args)
     (let ((buffer-file-name graph-file))
       (executable-chmod))
-    (when zettel2-graph-format
+    (unless (eq zettel2-graph-format 'standalone)
       (call-process "dot" nil 0 nil graph-file
                     (concat "-T" zettel2-graph-format)
                     "-o"
-                    (concat (file-name-sans-extension graph-file)
-                            "." zettel2-graph-format)))))
+                    (file-name-with-extension graph-file
+                                              zettel2-graph-format)))))
+
+(defun zettel2-graph-display (&optional format)
+  "Display the graph in a given FORMAT."
+  (interactive)
+  (let ((format (or format zettel2-graph-format)))
+    (if (eq format 'standalone)
+        (let ((graph-file (expand-file-name zettel2-graph-file)))
+          (call-process graph-file nil 0 nil))
+      (let ((graph-file (file-name-with-extension zettel2-graph-file
+                                                  format)))
+        (call-process "xdg-open" nil 0 nil graph-file)))))
 
 ;;;###autoload
 (defun zettel2-graph (&optional arg)
-  "Update and possibly display the graph of references.
+  "Update and display the graph of references.
 
-With C-u display the graph after updating it.
+With `\\[universal-argument]' don't show the tags on the graph.
+For some use cases it's more readable this way.
 
-With C-u C-u don't show the tags on the graph."
+With `\\[universal-argument] \\[universal-argument]' only update
+the graph, don't (re)display it."
   (interactive "P")
   (cond
    ((null arg)
-    (zettel2-update-graph)
-    (if zettel2-graph-format
-        (let ((graph-file (concat (file-name-sans-extension zettel2-graph-file)
-                                  "." zettel2-graph-format)))
-          (call-process "xdg-open" nil 0 nil graph-file))
-      (let ((graph-file (expand-file-name zettel2-graph-file)))
-        (call-process graph-file nil 0 nil))))
+    (zettel2-graph-update)
+    (zettel2-graph-display))
    ((equal arg '(4))
-    (zettel2-update-graph))
+    (zettel2-graph-update "--no-tags")
+    (zettel2-graph-display))
    ((equal arg '(16))
-    (zettel2-update-graph "--no-tags"))))
+    (zettel2-graph-update))))
 
 
 (provide 'zettel2-graph)
