@@ -55,6 +55,18 @@
    "zettel:"
    (zettel2-file-id (completing-read "File: " (zettel2-all-notes)))))
 
+(defun zettel2-link-export (path desc backend)
+  (let* ((file (zettel2-get-note-by-id path))
+         (file-base-name (file-name-sans-extension file)))
+    ;; Loosely borrowed from Denote by Protesilaos Stavrou.
+    (cond
+     ((eq backend 'html) (format "<a href=\"%s.html\">%s</a>" file-base-name desc))
+     ((eq backend 'latex) (format "\\href{%s}{%s}" (replace-regexp-in-string "[\\{}$%&_#~^]" "\\\\\\&" file) desc))
+     ((eq backend 'texinfo) (format "@uref{%s,%s}" file desc))
+     ((eq backend 'ascii) (format "[%s] <zettel:%s>" desc file))
+     ((eq backend 'md) (format "[%s](%s.md)" desc file-base-name))
+     (t (format "%s (%s)" desc file-base-name)))))
+
 ;;; XXX: Currently this displays a link prefix by replacing the hidden
 ;;; leading "[" character of the link with this prefix.  Apart from
 ;;; being a hack, it seems to persist during a mode change.  Right now
@@ -68,6 +80,7 @@
  "zettel"
  :follow #'zettel2-link-follow
  :complete #'zettel2-link-complete
+ :export #'zettel2-link-export
  :activate-func #'zettel2-link-make-overlay)
 
 
