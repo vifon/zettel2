@@ -4,6 +4,9 @@ zettel2 [name desperately in need of a change]
 A set of lightweight Emacs functionalities augmenting the `org-mode`
 note-taking and note management experience in a non-invasive manner.
 
+A successor to [zettel-mode](https://github.com/vifon/zettel-mode) but
+different enough to warrant being a separate project.
+
 FEATURES
 --------
 
