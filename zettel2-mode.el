@@ -24,6 +24,10 @@
 
 ;; A major mode based on org-mode exposing the zettel2 functionality.
 
+;; FAQ:
+;; - Q: Why is this a major mode and not a minor mode?
+;;   A: This way it can be triggered by `auto-mode-alist'.
+
 ;;; Code:
 
 (require 'zettel2)
