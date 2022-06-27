@@ -48,13 +48,17 @@ Passed to `format-time-string'.")
 (defconst zettel2-id-regexp
   (rx (= 8 digit) "T" (= 6 digit)))
 
-(defcustom zettel2-frontmatter-template "\
+(defconst zettel2-frontmatter-simple "#+TITLE: %t\n\n")
+(defconst zettel2-frontmatter-with-id "\
 :PROPERTIES:
 :ID:          %i
 :END:
 #+TITLE:      %t
 
 "
+  "Compatible with `org-mode' IDs, but might break the `deft' title detection.")
+
+(defcustom zettel2-frontmatter-template zettel2-frontmatter-simple
   "The frontmatter template passed to `format-spec'.
 
 %i is replaced with the note ID.
@@ -62,7 +66,10 @@ Passed to `format-time-string'.")
 
 Not all identifiers need to be used, but setting the title is
 highly recommended."
-  :type 'string)
+  :type `(choice
+          (const :tag "Simple" ,zettel2-frontmatter-simple)
+          (const :tag "With ID" ,zettel2-frontmatter-with-id)
+          (string :tag "Custom")))
 
 (defun zettel2-all-notes (&optional directory)
   "List all the valid notes in DIRECTORY or the current directory."
