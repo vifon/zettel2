@@ -136,15 +136,35 @@ highly recommended."
       (goto-char (point-max)))))
 
 (defun zettel2-backrefs ()
-  "Show the notes referencing this one using `grep'."
+  "Show the notes referencing this one."
   (interactive)
-  (unless (bound-and-true-p grep-template)
-    (grep-compute-defaults))
-  (lgrep (concat ":"
-                 (regexp-quote (zettel2-file-id buffer-file-name))
-                 "\\(--\\|]\\)")
-         (mapconcat #'shell-quote-argument (zettel2-all-notes)
-                    " ")))
+  (let ((backrefs-buffer-name "*zettel-backrefs*")
+        (xrefs (xref-matches-in-files
+                (concat ":"
+                        (regexp-quote (zettel2-file-id buffer-file-name))
+                        "\\(--\\|]\\)")
+                (mapcar #'expand-file-name (zettel2-all-notes))))
+        (file (file-relative-name buffer-file-name)))
+    (unless xrefs
+      (user-error "No references to `%s'" file))
+    (with-current-buffer (get-buffer-create backrefs-buffer-name)
+      (grep-mode)
+      (toggle-truncate-lines 1)
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert (format-message "# Backrefs for `%s':\n\n" file))
+        (apply #'insert (mapcar
+                         (lambda (xref)
+                           (let ((loc (xref-match-item-location xref)))
+                             (format "%s:%s:%s\n"
+                                     (file-relative-name
+                                      (xref-location-group loc))
+                                     (xref-location-line loc)
+                                     (substring-no-properties (xref-item-summary xref)))))
+                         xrefs)))
+      (goto-char (point-min))
+      (display-buffer (current-buffer)))
+    (setq next-error-last-buffer (get-buffer backrefs-buffer-name))))
 
 
 (provide 'zettel2)
