@@ -7,6 +7,11 @@ note-taking and note management experience in a non-invasive manner.
 A successor to [zettel-mode](https://github.com/vifon/zettel-mode) but
 different enough to warrant being a separate project.
 
+`zettel2` focuses on providing a consistent naming scheme, links
+resistant to file renaming and a graph showing the relationship
+between the notes.  All this while avoiding putting artificial
+restrains such as limiting its use to a single directory.
+
 FEATURES
 --------
 
