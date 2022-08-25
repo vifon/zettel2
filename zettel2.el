@@ -120,6 +120,7 @@ highly recommended."
               (concat "__" (string-join tags "_"))
             "")))
 
+;;;###autoload
 (defun zettel2-create-note (title &optional tags)
   "Create a new note with a given TITLE and TAGS."
   (interactive
