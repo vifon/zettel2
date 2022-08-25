@@ -57,18 +57,28 @@ Passed to `format-time-string'.")
 
 "
   "Compatible with `org-mode' IDs, but might break the `deft' title detection.")
+(defconst zettel2-frontmatter-with-date "\
+#+TITLE: %t
+#+DATE: %d
+
+"
+  "A human readable date, duplicated from the ID in the filename
+for the user convenience.")
+
 
 (defcustom zettel2-frontmatter-template zettel2-frontmatter-simple
   "The frontmatter template passed to `format-spec'.
 
 %i is replaced with the note ID.
 %t is replaced with the note title.
+%d is replaced with the note creation date.
 
 Not all identifiers need to be used, but setting the title is
 highly recommended."
   :type `(choice
           (const :tag "Simple" ,zettel2-frontmatter-simple)
           (const :tag "With ID" ,zettel2-frontmatter-with-id)
+          (const :tag "With date" ,zettel2-frontmatter-with-date)
           (string :tag "Custom")))
 
 (defun zettel2-all-notes (&optional directory)
@@ -133,7 +143,8 @@ highly recommended."
     (with-current-buffer (get-file-buffer file-name)
       (insert (format-spec zettel2-frontmatter-template
                            `((?i . ,(zettel2-file-id file-name))
-                             (?t . ,title))))
+                             (?t . ,title)
+                             (?d . ,(format-time-string (org-time-stamp-format))))))
       (goto-char (point-max)))))
 
 (defun zettel2-backrefs ()
