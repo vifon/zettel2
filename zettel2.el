@@ -35,6 +35,8 @@
 
 ;;; Code:
 
+(require 'zettel2-frontmatter)
+
 
 (defgroup zettel2 nil
   "Helpers for note organization."
@@ -47,39 +49,6 @@ Passed to `format-time-string'.")
 
 (defconst zettel2-id-regexp
   (rx (= 8 digit) "T" (= 6 digit)))
-
-(defconst zettel2-frontmatter-simple "#+TITLE: %t\n\n")
-(defconst zettel2-frontmatter-with-id "\
-:PROPERTIES:
-:ID:          %i
-:END:
-#+TITLE:      %t
-
-"
-  "Compatible with `org-mode' IDs, but might break the `deft' title detection.")
-(defconst zettel2-frontmatter-with-date "\
-#+TITLE: %t
-#+DATE: %d
-
-"
-  "A human readable date, duplicated from the ID in the filename
-for the user convenience.")
-
-
-(defcustom zettel2-frontmatter-template zettel2-frontmatter-simple
-  "The frontmatter template passed to `format-spec'.
-
-%i is replaced with the note ID.
-%t is replaced with the note title.
-%d is replaced with the note creation date.
-
-Not all identifiers need to be used, but setting the title is
-highly recommended."
-  :type `(choice
-          (const :tag "Simple" ,zettel2-frontmatter-simple)
-          (const :tag "With ID" ,zettel2-frontmatter-with-id)
-          (const :tag "With date" ,zettel2-frontmatter-with-date)
-          (string :tag "Custom")))
 
 (defun zettel2-all-notes (&optional directory)
   "List all the valid notes in DIRECTORY or the current directory."
@@ -142,9 +111,9 @@ highly recommended."
     (find-file-other-window file-name)
     (with-current-buffer (get-file-buffer file-name)
       (insert (format-spec zettel2-frontmatter-template
-                           `((?i . ,(zettel2-file-id file-name))
-                             (?t . ,title)
-                             (?d . ,(format-time-string (org-time-stamp-format))))))
+                           (zettel2-frontmatter-format-spec
+                            (zettel2-file-id file-name)
+                            title)))
       (goto-char (point-max)))))
 
 (defun zettel2-backrefs ()
