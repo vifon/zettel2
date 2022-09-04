@@ -22,11 +22,12 @@
 
 ;;; Commentary:
 
-;; A major mode based on org-mode exposing the zettel2 functionality.
+;; A mode exposing the zettel2 functionality
 ;;
-;; If a major mode is undesirable for whatever reason, an analogous
-;; minor mode is also provided.  The major mode has the advantage of
-;; `auto-mode-alist' being able to enable it.
+;; The major mode has the advantage of `auto-mode-alist' being able to
+;; enable it.  On the other hand, M-tab doesn't work in it as it does
+;; in `org-mode' due to pcomplete being bound to the specific
+;; major-mode, so it's considered obsolete.
 
 ;;; Code:
 
@@ -53,6 +54,7 @@
 ;;;###autoload
 (define-derived-mode zettel2-mode org-mode "Zettel"
   "A mode exposing the zettel2 functionality.")
+(make-obsolete 'zettel2-mode 'zettel2-minor-mode "2022-09-04")
 
 ;;;###autoload
 (define-minor-mode zettel2-minor-mode

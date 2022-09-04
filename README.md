@@ -18,11 +18,10 @@ FEATURES
 `zettel2` strives to be modular and not impose unnecessary
 functionality upon the user.  It contains the following modules:
 
-* `zettel2` contains the base commands and the functions to work with the note IDs.
-* `zettel2-mode` is a major mode based on `org-mode` that can be added
-  to `auto-mode-alist` as wanted.  This mode modifies `org-mode`
-  keymap the expose the `zettel2` functionality in an easy to
-  use manner.
+* `zettel2` contains the base commands and the functions to work with
+  the note IDs.
+* `zettel2-mode` provides a mode with a keymap exposing most of the
+  `zettel2` functionality.
 * `zettel2-link` provides a custom `org-mode` link type (its format
   being `zettel:ID`) that behaves roughly like the `file:` links but
   contain only the note ID allowing to freely rename the file without
@@ -119,14 +118,19 @@ To install `zettel2` mode using `straight.el`, use the following code:
 (use-package zettel2
   :straight (:host github :repo "vifon/zettel2"
              :files (:defaults "graph.pl"))
-  :mode (("/\\.deft/[^/]+\\.org\\'" . zettel2-mode)
-         ("/zettels?/[^/]+\\.org\\'" . zettel2-mode))
+  :after org
+  :init (add-hook 'org-mode-hook
+                  (defun zettel2-enable ()
+                    (when (and buffer-file-name
+                               (or (string-match-p "/\\.deft/[^/]+\\.org\\'" buffer-file-name)
+                                   (string-match-p "/zettels?/[^/]+\\.org\\'" buffer-file-name)))
+                      (zettel2-minor-mode))))
   :config (progn
             (require 'zettel2-link)
             (setq zettel2-graph-format "png")))
 ```
 
-This specific configuration associates `zettel2-mode` with all the
+This specific configuration associates `zettel2-minor-mode` with all the
 `*.org` files inside any directory named `.deft`, `zettel` or
 `zettels`.  It also activates the custom link type and sets the
 dependency graph format to "png".  This is just an example (that the
