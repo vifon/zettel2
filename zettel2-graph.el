@@ -83,7 +83,7 @@ Saves the current buffer before generating the graph."
     (let ((buffer-file-name graph-file))
       (executable-chmod))
     (unless (eq zettel2-graph-format 'standalone)
-      (call-process "dot" nil 0 nil graph-file
+      (call-process "dot" nil nil nil graph-file
                     (concat "-T" zettel2-graph-format)
                     "-o"
                     (file-name-with-extension graph-file
