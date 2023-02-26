@@ -3,6 +3,7 @@
 ;; Copyright (C) 2022  Wojciech Siewierski
 
 ;; Author: Wojciech Siewierski
+;; URL: https://github.com/vifon/zettel2
 ;; Keywords: outlines, org-mode, convenience
 ;; Version: 0.9
 ;; Package-Requires: ((emacs "28.1") (org "9.5"))
