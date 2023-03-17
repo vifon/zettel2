@@ -119,12 +119,12 @@ To install `zettel2` mode using `straight.el`, use the following code:
   :straight (:host github :repo "vifon/zettel2"
              :files (:defaults "graph.pl"))
   :after org
-  :init (add-hook 'org-mode-hook
-                  (defun zettel2-enable ()
-                    (when (and buffer-file-name
-                               (or (string-match-p "/\\.deft/[^/]+\\.org\\'" buffer-file-name)
-                                   (string-match-p "/zettels?/[^/]+\\.org\\'" buffer-file-name)))
-                      (zettel2-minor-mode))))
+  :hook (org-mode . zettel2-enable)
+  :init (defun zettel2-enable ()
+          (when (and buffer-file-name
+                     (or (string-match-p "/\\.deft/[^/]+\\.org\\'" buffer-file-name)
+                         (string-match-p "/zettels?/[^/]+\\.org\\'" buffer-file-name)))
+            (zettel2-minor-mode)))
   :config (progn
             (require 'zettel2-link)
             (setq zettel2-graph-format "png")))
