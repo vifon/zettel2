@@ -56,7 +56,9 @@
 
 (defcustom zettel2-link-text-prefix "§ "
   "A visual prefix for the internal links between notes."
-  :type 'string)
+  :type '(choice
+          (string :tag "Prefix")
+          (const :tag "No prefix" nil)))
 
 (defun zettel2-link-follow (link &optional arg)
   "Link follow handler for org LINKs.
@@ -99,7 +101,8 @@ PATH, DESC and BACKEND passed according to the
 
 START and BRACKETP passed according to the `org-link-parameters'
 docs.  The other arguments are ignored."
-  (when bracketp
+  (when (and zettel2-link-text-prefix
+             bracketp)
     (put-text-property start (1+ start)
                        'display zettel2-link-text-prefix)))
 
