@@ -38,6 +38,8 @@
 
 (require 'zettel2-frontmatter)
 
+(require 'xref)
+
 
 (defgroup zettel2 nil
   "Helpers for note organization."
@@ -92,7 +94,7 @@ Passed to `format-time-string'.")
   (match-string 1 file))
 
 (defun zettel2-sanitize-name (name &optional tags)
-  "Compute a valid filename for a new note named NAME."
+  "Compute a valid filename for a new note named NAME tagged with TAGS."
   (format "%s--%s%s.org"
           (format-time-string zettel2-id-time-format)
           (replace-regexp-in-string "[^a-zA-Z0-9]+" "-" (downcase name))
@@ -142,7 +144,8 @@ Passed to `format-time-string'.")
                                      (file-relative-name
                                       (xref-location-group loc))
                                      (xref-location-line loc)
-                                     (substring-no-properties (xref-item-summary xref)))))
+                                     (substring-no-properties
+                                      (xref-item-summary xref)))))
                          xrefs)))
       (goto-char (point-min))
       (display-buffer (current-buffer)))

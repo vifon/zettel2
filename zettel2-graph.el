@@ -103,7 +103,7 @@ Saves the current buffer before generating the graph."
 (defun zettel2-graph (&optional arg)
   "Update and display the graph of references.
 
-With `\\[universal-argument]' don't show the tags on the graph.
+With `\\[universal-argument]' (ARG) don't show the tags on the graph.
 For some use cases it's more readable this way.
 
 With `\\[universal-argument] \\[universal-argument]' only update

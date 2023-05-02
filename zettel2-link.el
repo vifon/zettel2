@@ -59,20 +59,32 @@
   :type 'string)
 
 (defun zettel2-link-follow (link &optional arg)
+  "Link follow handler for org LINKs.
+
+ARG is passed verbatim to `org-link-open-as-file'."
   (org-link-open-as-file (zettel2-get-note-by-id link) arg))
 
 (defun zettel2-link-complete ()
+  "Link complete handler for org links."
   (concat
    "zettel:"
    (zettel2-file-id (completing-read "File: " (zettel2-all-notes)))))
 
 (defun zettel2-link-export (path desc backend)
+  "Link export handler for org links.
+
+PATH, DESC and BACKEND passed according to the
+`org-link-parameters' docs."
   (let* ((file (zettel2-get-note-by-id path))
          (file-base-name (file-name-sans-extension file)))
     ;; Loosely borrowed from Denote by Protesilaos Stavrou.
     (cond
-     ((eq backend 'html) (format "<a href=\"%s.html\">%s</a>" file-base-name desc))
-     ((eq backend 'latex) (format "\\href{%s}{%s}" (replace-regexp-in-string "[\\{}$%&_#~^]" "\\\\\\&" file) desc))
+     ((eq backend 'html) (format "<a href=\"%s.html\">%s</a>"
+                                 file-base-name desc))
+     ((eq backend 'latex) (format "\\href{%s}{%s}"
+                                  (replace-regexp-in-string
+                                   "[\\{}$%&_#~^]" "\\\\\\&" file)
+                                  desc))
      ((eq backend 'texinfo) (format "@uref{%s,%s}" file desc))
      ((eq backend 'ascii) (format "[%s] <zettel:%s>" desc file))
      ((eq backend 'md) (format "[%s](%s.md)" desc file-base-name))
@@ -82,7 +94,11 @@
 ;;; leading "[" character of the link with this prefix.  Apart from
 ;;; being a hack, it seems to persist during a mode change.  Right now
 ;;; it will suffice, but a better solution is needed.
-(defun zettel2-link-make-overlay (start end path bracketp)
+(defun zettel2-link-make-overlay (start _end _path bracketp)
+  "Mark the internal links with `zettel2-link-text-prefix'.
+
+START and BRACKETP passed according to the `org-link-parameters'
+docs.  The other arguments are ignored."
   (when bracketp
     (put-text-property start (1+ start)
                        'display zettel2-link-text-prefix)))

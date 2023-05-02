@@ -16,9 +16,15 @@ repos:
   hooks:
     - id: shellcheck
     - id: elisp-check-parens
-    # # TODO: Fix and enable this hook.
-    # - id: elisp-checkdoc
+    - id: elisp-checkdoc
     - id: elisp-package-lint
       args: [--main-file, zettel2.el]
     - id: no-elc
     - id: no-tabs
+
+- repo: https://github.com/vifon/elisp-lint
+  rev: b5fd5cb973571cde3d6ee69a5bb9cdaf74648664
+  hooks:
+    - id: elisp-lint
+      args: [--main-file, zettel2.el]
+    - id: elisp-lint-cleanup
