@@ -23,7 +23,7 @@ repos:
     - id: no-tabs
 
 - repo: https://github.com/vifon/elisp-lint
-  rev: b5fd5cb973571cde3d6ee69a5bb9cdaf74648664
+  rev: 7d9ec0f5141d2f3e4c0fc890d40fceca81f8eb6f
   hooks:
     - id: elisp-lint
       args: [--main-file, zettel2.el]
