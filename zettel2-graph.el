@@ -65,7 +65,7 @@ $ dot -T{format} -o {name}.{format}
 Can also be set to the symbol `standalone' to use -Tx11 with no
 external files and their readers necessary."
   :type '(choice
-          (const :tag "standalone" 'standalone)
+          (const :tag "standalone" standalone)
           (string)))
 
 (defun zettel2-graph-update (&rest args)
