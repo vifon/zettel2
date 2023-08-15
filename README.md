@@ -130,10 +130,18 @@ To install `zettel2` mode using `straight.el`, use the following code:
             (setq zettel2-graph-format "png")))
 ```
 
-This specific configuration associates `zettel2-minor-mode` with all the
-`*.org` files inside any directory named `.deft`, `zettel` or
+This specific configuration associates `zettel2-minor-mode` with all
+the `*.org` files inside any directory named `.deft`, `zettel` or
 `zettels`.  It also activates the custom link type and sets the
 dependency graph format to "png".  This is just an example (that the
 author happens to use) and it's perfectly fine to customize it.
+
+Another way would be to put the following into a `.dir-locals.el` file
+which would enable `zettel2-minor-mode` whenever `org-mode` is enabled
+in this directory.
+
+```elisp
+((org-mode . ((eval . (zettel2-minor-mode)))))
+```
 
 Installation with `package.el` wasn't tested.
