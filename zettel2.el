@@ -1,4 +1,4 @@
-;;; zettel2.el --- Helpers for note organization     -*- lexical-binding: t; -*-
+;;; zettel2.el --- Helpers for note organizing     -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Wojciech Siewierski
 
