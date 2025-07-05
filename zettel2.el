@@ -69,11 +69,8 @@ Passed to `format-time-string'.")
   "List all the tags present in DIRECTORY in lexicographical order."
   (sort (seq-uniq
          (mapcan (lambda (file)
-                   (split-string
-                    (replace-regexp-in-string ".*__\\([^.]+\\)\\.org"
-                                              "\\1"
-                                              file)
-                    "_"))
+                   (when (string-match ".*__\\([^.]+\\)\\.org" file)
+                     (split-string (match-string 1 file) "_")))
                  (zettel2-all-notes directory)))
         #'string<))
 
