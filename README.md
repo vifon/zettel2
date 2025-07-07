@@ -108,6 +108,8 @@ KEYMAP
   the current note using `grep`.
 - <kbd>M-n</kbd> (`org-next-link`)
 - <kbd>M-p</kbd> (`org-previous-link`)
+- a wrapper for `org-insert-link` that pre-inserts the zettel-specific
+  link prefix for less friction when adding internal links
 
 INSTALLATION
 ------------

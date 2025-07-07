@@ -29,7 +29,9 @@
 ;; obviously different from the external ones.
 ;;
 ;; To create a link use the "zettel:" prefix when creating a link with
-;; `org-insert-link' (C-c C-l).
+;; `org-insert-link' (C-c C-l).  `zettel2-link-insert' can be used
+;; instead of `org-insert-link' to pre-insert this
+;; prefix automatically.
 
 ;;; FAQ:
 
@@ -112,6 +114,22 @@ docs.  The other arguments are ignored."
  :complete #'zettel2-link-complete
  :export #'zettel2-link-export
  :activate-func #'zettel2-link-make-overlay)
+
+
+;;;###autoload
+(defun zettel2-link-insert ()
+  "Call `org-insert-link' and pre-insert the \"zettel:\" prefix.
+
+If `org-stored-links' is non-nil, works exactly like `org-insert-link'
+because the user probably wants to use a store link instead."
+  (interactive)
+  (if org-stored-links
+      (call-interactively #'org-insert-link)
+    (minibuffer-with-setup-hook
+        (lambda ()
+          (when (string-empty-p (minibuffer-contents))
+            (insert "zettel:")))
+      (call-interactively #'org-insert-link))))
 
 
 (provide 'zettel2-link)

@@ -40,6 +40,7 @@
   :group 'zettel2)
 
 (declare-function zettel2-graph "zettel2-graph")
+(declare-function zettel2-link-insert "zettel2-link")
 
 (defvar zettel2-mode-map
   (let ((map (make-sparse-keymap)))
@@ -48,6 +49,7 @@
     (define-key map (kbd "C-c C-r") #'zettel2-backrefs)
     (define-key map (kbd "M-n") #'org-next-link)
     (define-key map (kbd "M-p") #'org-previous-link)
+    (define-key map [remap org-insert-link] #'zettel2-link-insert)
     map))
 
 ;;;###autoload
