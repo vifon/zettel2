@@ -104,7 +104,11 @@ Passed to `format-time-string'.")
   "Create a new note with a given TITLE and TAGS."
   (interactive
    (list
-    (read-from-minibuffer "Title: ")
+    (read-from-minibuffer "Title: "
+                          (when (use-region-p)
+                            (buffer-substring-no-properties
+                             (region-beginning)
+                             (region-end))))
     (completing-read-multiple "Tags: "
                               (zettel2-all-tags))))
   (let ((file-name (zettel2-sanitize-name title tags)))
