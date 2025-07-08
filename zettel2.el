@@ -101,7 +101,10 @@ Passed to `format-time-string'.")
 
 ;;;###autoload
 (defun zettel2-create-note (title &optional tags)
-  "Create a new note with a given TITLE and TAGS."
+  "Create a new note with a given TITLE and TAGS.
+
+If there is a region active, make it into a link to the newly
+created note."
   (interactive
    (list
     (read-from-minibuffer "Title: "
@@ -111,13 +114,16 @@ Passed to `format-time-string'.")
                              (region-end))))
     (completing-read-multiple "Tags: "
                               (zettel2-all-tags))))
-  (let ((file-name (zettel2-sanitize-name title tags)))
+  (let* ((file-name (zettel2-sanitize-name title tags))
+         (file-id (zettel2-file-id file-name)))
+    (when (use-region-p)
+      ;; XXX: Should that be a part of zettel2-link.el instead?
+      (org-insert-link nil (concat "zettel:" file-id)))
     (find-file-other-window file-name)
     (with-current-buffer (get-file-buffer file-name)
       (insert (format-spec zettel2-frontmatter-template
                            (zettel2-frontmatter-format-spec
-                            (zettel2-file-id file-name)
-                            title)))
+                            file-id title)))
       (goto-char (point-max)))))
 
 (defun zettel2-backrefs ()
