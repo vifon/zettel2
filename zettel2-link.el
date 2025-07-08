@@ -108,12 +108,22 @@ docs.  The other arguments are ignored."
     (put-text-property start (1+ start)
                        'display zettel2-link-text-prefix)))
 
+(defun zettel2-link-description (link desc)
+  "Use the note title as the link's default description.
+
+LINK and DESC passed according to the `org-link-parameters' docs."
+  (or desc
+      (org-get-title
+       (zettel2-get-note-by-id
+        (string-remove-prefix "zettel:" link)))))
+
 (org-link-set-parameters
  "zettel"
  :follow #'zettel2-link-follow
  :complete #'zettel2-link-complete
  :export #'zettel2-link-export
- :activate-func #'zettel2-link-make-overlay)
+ :activate-func #'zettel2-link-make-overlay
+ :insert-description #'zettel2-link-description)
 
 
 ;;;###autoload
