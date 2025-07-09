@@ -44,8 +44,9 @@ files are being kept or how many distinct sets of notes we own.**
 
 The only hard requirements concern the filename, not the file
 contents.  Namely I've borrowed the excellent naming scheme from
-[Denote][1] by Protesilaos Stavrou et al.  Please refer to its
-documentation for the details.
+[Denote][1] by Protesilaos Stavrou et al, or some older iteration of
+it (it seems to have added a "signature" part since then).  The exact
+file-naming scheme used is `ID--TITLE__KEYWORDS.EXTENSION`.
 
 [1]: https://protesilaos.com/emacs/denote
 
