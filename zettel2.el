@@ -131,6 +131,8 @@ created note."
   (interactive)
   (let ((backrefs-buffer-name "*zettel-backrefs*")
         (xrefs (xref-matches-in-files
+                ;; Note: Do not replace with `rx'.  These are *not*
+                ;; Emacs regexp, these are grep regexps.
                 (concat ":"
                         (regexp-quote (zettel2-file-id buffer-file-name))
                         "\\(--\\|]\\)")
