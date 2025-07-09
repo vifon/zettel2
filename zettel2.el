@@ -53,6 +53,10 @@ Passed to `format-time-string'.")
 (defconst zettel2-id-regexp
   (rx (= 8 digit) "T" (= 6 digit)))
 
+(defcustom zettel2-backrefs-use-title t
+  "Show results of `zettel2-backrefs' using file titles, not filenames."
+  :type 'boolean)
+
 (defun zettel2-all-notes (&optional directory)
   "List all the valid notes in DIRECTORY or the current directory."
   (directory-files
@@ -146,16 +150,23 @@ created note."
       (let ((inhibit-read-only t))
         (erase-buffer)
         (insert (format-message "# Backrefs for `%s':\n\n" file))
-        (apply #'insert (mapcar
-                         (lambda (xref)
-                           (let ((loc (xref-match-item-location xref)))
-                             (format "%s:%s:%s\n"
-                                     (file-relative-name
-                                      (xref-location-group loc))
-                                     (xref-location-line loc)
-                                     (substring-no-properties
-                                      (xref-item-summary xref)))))
-                         xrefs)))
+        (apply #'insert
+               (mapcar
+                (lambda (xref)
+                  (let* ((loc (xref-match-item-location xref))
+                         (file (file-relative-name
+                                (xref-location-group loc)))
+                         (title
+                          (if zettel2-backrefs-use-title
+                              (propertize file
+                                          'display (org-get-title file))
+                            file)))
+                    (format "%s:%s:%s\n"
+                            title
+                            (xref-location-line loc)
+                            (substring-no-properties
+                             (xref-item-summary xref)))))
+                xrefs)))
       (goto-char (point-min))
       (display-buffer (current-buffer)))
     (setq next-error-last-buffer (get-buffer backrefs-buffer-name))))
