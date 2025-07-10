@@ -92,6 +92,9 @@ PATH, DESC and BACKEND passed according to the
      ((eq backend 'texinfo) (format "@uref{%s,%s}" file desc))
      ((eq backend 'ascii) (format "[%s] <zettel:%s>" desc file))
      ((eq backend 'md) (format "[%s](%s.md)" desc file-base-name))
+     ;; Seemingly used mainly for conversion from hyphenated list
+     ;; items to full headings, for example with \\`C-c *'.
+     ((eq backend 'org) (org-link-make-string (concat "zettel:" path) desc))
      (t (format "%s (%s)" desc file-base-name)))))
 
 ;;; XXX: Currently this displays a link prefix by replacing the hidden
