@@ -56,11 +56,17 @@
   "The custom links within `zettel2-mode'."
   :group 'zettel2)
 
-(defcustom zettel2-link-text-prefix "§ "
+(defcustom zettel2-link-text-prefix nil
   "A visual prefix for the internal links between notes."
   :type '(choice
-          (string :tag "Prefix")
+          (const :tag "The section sign" "§ ")
+          (string :tag "Custom prefix")
           (const :tag "No prefix" nil)))
+
+(defface zettel2-link-face
+  '((t ( :inherit org-link
+         :italic t)))
+  "A face for the links between `zettel2-mode' notes.")
 
 (defun zettel2-link-follow (link &optional arg)
   "Link follow handler for org LINKs.
@@ -126,7 +132,8 @@ LINK and DESC passed according to the `org-link-parameters' docs."
  :complete #'zettel2-link-complete
  :export #'zettel2-link-export
  :activate-func #'zettel2-link-make-overlay
- :insert-description #'zettel2-link-description)
+ :insert-description #'zettel2-link-description
+ :face 'zettel2-link-face)
 
 
 ;;;###autoload
