@@ -135,6 +135,10 @@ LINK and DESC passed according to the `org-link-parameters' docs."
  :insert-description #'zettel2-link-description
  :face 'zettel2-link-face)
 
+(defun zettel2-link-unload-function ()
+  "Remove the custom link definition on feature unload."
+  (setf (alist-get "zettel" org-link-parameters nil t #'equal) nil))
+
 
 ;;;###autoload
 (defun zettel2-link-insert ()
